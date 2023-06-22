@@ -1,7 +1,6 @@
 from flask import Flask, render_template, jsonify
-from database import carrega_vagas_db
+from database import carrega_vagas_db, carrega_vaga_db
 app = Flask(__name__)
-
 
 
 @app.route("/")
@@ -12,8 +11,14 @@ def page_home():
 
 @app.route("/vagas")
 def lista_vagas():
-    return jsonify(VAGAS)
+    return jsonify(vagas)
 
+@app.route("/vaga/<id>")
+def mosta_vaga(id):
+    vaga = carrega_vaga_db(id)
+    if not vaga:
+        return "Not Found", 404
+    return render_template("detalhevaga.html",vaga=vaga)
 
 if __name__ == "__main__":
     app.run(host='0.0.0.0', debug=True)
